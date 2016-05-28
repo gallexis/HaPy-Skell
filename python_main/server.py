@@ -1,9 +1,3 @@
-#
-#   Hello World server in Python
-#   Binds REP socket to tcp://*:5555
-#   Expects b"Hello" from client, replies with b"World"
-#
-
 import time
 import zmq
 import json
@@ -28,17 +22,14 @@ class Network(Thread):
         while True:
 
             message = self.socket.recv()
-            print("Received: ")
-            print(message)
-
-            self.socket.send(b"ack")
+            print("Received: "+str(message))
+            a = json.loads(message.decode("utf-8") )
+            print(a["message"])
+            self.socket.send(json.dumps({"order":"python","message":"hello"}).encode("utf-8"))
 
 
 thread_1 = Network()
 thread_1.start()
-
-#call(["./client", " > log"])
-#os.spawnl(os.P_NOWAIT, "./client > log")
 
 subprocess.Popen(["./../haskell_core/Haskell_core"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 print("haskell started")

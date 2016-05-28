@@ -28,7 +28,10 @@ main =
 
     send requester [] $ B.pack $ json_to_str $ Command "order" "world"
     w <- receive requester
-    liftIO . logging $  "Received " ++ show w
+    let Just(p) = str_to_json $ B.unpack  w
+    liftIO . logging $  "Received "  ++ JSON_Parser.order p ++ " -- " ++ JSON_Parser.message p
+
+
 
     liftIO $ logging "exit"
 
