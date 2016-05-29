@@ -21,7 +21,7 @@ class Receiver(Thread):
 
         self.receivingQueue = queue
         self.context = zmq.Context()
-        self.socket = self.context.socket(zmq.DEALER)
+        self.socket = self.context.socket(zmq.PAIR)
         self.socket.bind("ipc:///tmp/1")
 
     def run(self):
@@ -43,11 +43,10 @@ class Sender(Thread):
         self.sendingQueue = queue
 
     def run(self):
-        print("ttttt")
-        while not self.sendingQueue.empty():
+        while True:
             message = self.sendingQueue.get()
             self.socket.send_json(message)
-        print("sdfgsfsgfsfgsfdddddddt")
+            print("sent to haskell")
 
 class Network:
 

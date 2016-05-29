@@ -19,6 +19,8 @@ if "__main__" == __name__:
     epm = etm.external_process_manager()
     epm.start()
 
-    time.sleep(2)
-    sendingQueue.put(json.dumps({"order":"test","message":"python to haskell"}))
+    time.sleep(5)
+    sendingQueue.put({"order":"test","message":"python to haskell1"})
+    sendingQueue.put({"order":"test","message":"python to haskell2"})
+    sendingQueue.put({"order":"test","message":"python to haskell3"})
     print("sent to sendingQueue")
