@@ -16,14 +16,12 @@ logging str = do
         hSetBuffering h (BlockBuffering Nothing)
         hPutStr h $ str ++ "\n"
 
-
-
 main :: IO ()
 main =
     runZMQ $ do
     liftIO $ logging "Connecting to python server..."
 
-    requester <- socket Req
+    requester <- socket Dealer
     connect requester "ipc:///tmp/1"
 
     send requester [] $ B.pack $ json_to_str $ Command "order" "world"
