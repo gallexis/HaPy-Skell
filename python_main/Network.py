@@ -1,9 +1,9 @@
 __author__ = 'alexisgallepe'
 
 import time
-import zmq
+import socket
 import json
-import os
+import os, sys
 import subprocess
 import random
 import psutil
@@ -16,18 +16,18 @@ from subprocess import call
 
 class Receiver(Thread):
 
-    def __init__(self, queue):
-        Thread.__init__(self)
+    def __init__(self, socket, queue):
 
+        Thread.__init__(self)
         self.receivingQueue = queue
-        self.context = zmq.Context()
-        self.socket = self.context.socket(zmq.PAIR)
-        self.socket.bind("ipc:///tmp/1")
+        self.socket = socket
+
 
     def run(self):
 
         while True:
-            message = self.socket.recv()
+            message = self.socket.recv(1024)
+            #print(message)
             decodedMessage = json.loads(message.decode("utf-8") )
             print("new message: ")
             print(decodedMessage)
@@ -37,22 +37,40 @@ class Receiver(Thread):
 class Sender(Thread):
 
     def __init__(self, socket, queue):
-        Thread.__init__(self)
 
+        Thread.__init__(self)
         self.socket = socket
         self.sendingQueue = queue
 
     def run(self):
         while True:
             message = self.sendingQueue.get()
-            self.socket.send_json(message)
+            self.socket.send(message.encode("utf-8"))
             print("sent to haskell")
+
+
 
 class Network:
 
     def __init__(self, receivingQueue, sendingQueue):
-        receiverThread = Receiver(receivingQueue)
-        senderThread = Sender(receiverThread.socket, sendingQueue)
+
+        server_address = '/tmp/test_sock.ipc'
+        # Make sure the socket does not already exist
+        try:
+            os.unlink(server_address)
+        except OSError:
+            if os.path.exists(server_address):
+                print("error sock")
+                raise
+
+        self.socket = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+        self.socket.bind(server_address)
+        self.socket.listen(5)
+
+        connection, client_address = self.socket.accept()
+
+        receiverThread = Receiver(connection,receivingQueue)
+        senderThread = Sender(connection, sendingQueue)
 
         receiverThread.start()
         senderThread.start()

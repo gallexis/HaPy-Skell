@@ -15,12 +15,9 @@ if "__main__" == __name__:
     networkTread = Network.Network(receivingQueue, sendingQueue)
 
     #Be sure receiver is waiting for client
-    time.sleep(1)
-    epm = etm.external_process_manager()
-    epm.start()
+    #epm = etm.external_process_manager()
+    #epm.start()
 
     time.sleep(5)
-    sendingQueue.put({"order":"test","message":"python to haskell1"})
-    sendingQueue.put({"order":"test","message":"python to haskell2"})
-    sendingQueue.put({"order":"test","message":"python to haskell3"})
+    sendingQueue.put(json.dumps({"order":"test","message":"python to haskell1"}))
     print("sent to sendingQueue")
