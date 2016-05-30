@@ -26,12 +26,21 @@ class Receiver(Thread):
     def run(self):
 
         while True:
-            message = self.socket.recv(1024)
-            #print(message)
-            decodedMessage = json.loads(message.decode("utf-8") )
-            print("new message: ")
-            print(decodedMessage)
-            self.receivingQueue.put(decodedMessage)
+            try:
+                message = self.socket.recv(1024)
+                if len(message) == 0:
+                    break
+
+                decodedMessage = json.loads(message.decode("utf-8") )
+                print("new message: ")
+                print(decodedMessage)
+                self.receivingQueue.put(decodedMessage)
+
+            except Exception as e:
+                print("socket error {} ".format(e))
+                self.socket.close()
+                break
+
 
 
 class Sender(Thread):
@@ -45,8 +54,16 @@ class Sender(Thread):
     def run(self):
         while True:
             message = self.sendingQueue.get()
-            self.socket.send(message.encode("utf-8"))
-            print("sent to haskell")
+
+            try:
+                self.socket.send(message.encode("utf-8"))
+                print("sent to haskell")
+
+            except Exception as e:
+                print("socket error {} ".format(e))
+                self.socket.close()
+                break
+
 
 
 
@@ -67,12 +84,11 @@ class Network:
         self.socket.bind(server_address)
         self.socket.listen(5)
 
-        connection, client_address = self.socket.accept()
+        connected_socket, client_address = self.socket.accept()
 
-        receiverThread = Receiver(connection,receivingQueue)
-        senderThread = Sender(connection, sendingQueue)
+        receiverThread = Receiver(connected_socket,receivingQueue)
+        senderThread = Sender(connected_socket, sendingQueue)
 
         receiverThread.start()
         senderThread.start()
         print("threads started")
-
