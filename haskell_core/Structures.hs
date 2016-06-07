@@ -1,6 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 
-module Data( Channel(..),
+module Structures( Channel(..),
              newChannel,
              writeChannel,
              readChannel
@@ -17,9 +17,9 @@ import Control.Concurrent
 
 
 type Stream a = MVar (Item a)
-data Item a   = Item a (Data.Stream a)
+data Item a   = Item a (Structures.Stream a)
 
-data Channel a = Channel (MVar (Data.Stream a)) (MVar (Data.Stream a))
+data Channel a = Channel (MVar (Structures.Stream a)) (MVar (Structures.Stream a))
 
 newChannel :: IO (Channel (Maybe Command))
 newChannel = do

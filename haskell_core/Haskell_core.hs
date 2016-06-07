@@ -3,7 +3,7 @@
 module Main where
 
 import JSON_Parser
-import Data
+import Structures
 import Manager
 
 import Control.Monad
