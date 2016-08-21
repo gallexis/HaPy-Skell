@@ -18,5 +18,6 @@ Executable haskellcore
       unix -any
   other-modules:
       Structures
+      Utils.Logging
       JSON_Parser
       Manager

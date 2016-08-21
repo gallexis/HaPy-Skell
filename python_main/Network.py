@@ -67,11 +67,16 @@ class Sender(Thread):
 
 
 
-class Network:
+class Network(Thread):
 
     def __init__(self, receivingQueue, sendingQueue):
+        Thread.__init__(self)
+
+        self.receivingQueue = receivingQueue
+        self.sendingQueue   = sendingQueue
 
         server_address = '/tmp/test_sock.ipc'
+
         # Make sure the socket does not already exist
         try:
             os.unlink(server_address)
@@ -84,11 +89,11 @@ class Network:
         self.socket.bind(server_address)
         self.socket.listen(5)
 
+    def run(self):
         connected_socket, client_address = self.socket.accept()
 
-        receiverThread = Receiver(connected_socket,receivingQueue)
-        senderThread = Sender(connected_socket, sendingQueue)
+        receiverThread = Receiver(connected_socket,self.receivingQueue)
+        senderThread = Sender(connected_socket, self.sendingQueue)
 
         receiverThread.start()
         senderThread.start()
-        print("threads started")

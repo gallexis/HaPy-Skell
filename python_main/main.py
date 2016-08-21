@@ -7,17 +7,19 @@ import queue as queue
 from python_main import Network
 from python_main import external_process_manager as etm
 
+
+# cd haskell_core.hsproj/ ;and  ghc Haskell_core.hs ;and cd ..
+
 if "__main__" == __name__:
 
     receivingQueue = queue.Queue()
     sendingQueue = queue.Queue()
 
     networkTread = Network.Network(receivingQueue, sendingQueue)
+    networkTread.start()
 
-    #Be sure receiver is waiting for client
-    #epm = etm.external_process_manager()
-    #epm.start()
+    epm = etm.external_process_manager()
+    epm.start()
 
-    time.sleep(4)
-    sendingQueue.put(json.dumps({"order":"test","message":"python to haskell1"}))
-    print("sent to sendingQueue")
+    #test
+    sendingQueue.put(json.dumps({"order":"display_message","message":"python to haskell1"}))

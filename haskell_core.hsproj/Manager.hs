@@ -24,14 +24,14 @@ import System.Posix
 import Control.Exception
 import Control.Concurrent
 
+import System.Posix
+import Utils.Logging
+
 
 display_message:: String -> String 
 display_message msg= "massage received: " ++ msg
 
-list_of_functions = fromList [ 
-                      ("display_message",display_message),
-                      ("local_test",display_message)
-                    ]
+list_of_functions = fromList [ ("display_message",display_message) ]
 
 
 
@@ -70,6 +70,7 @@ manager (Just(Command order message)) = do
         Nothing -> error "error"
         Just f -> do
           let a = f message
+          logging a
           return ()
       
 

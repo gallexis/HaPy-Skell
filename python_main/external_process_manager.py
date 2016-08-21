@@ -22,7 +22,8 @@ class external_process_manager(Thread):
     def run(self):
 
         # Run ext. program
-        p = subprocess.Popen(["./../haskell_core/Haskell_core"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        print("opening")
+        p = subprocess.Popen(["./../haskell_core.hsproj/Haskell_core"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         p.communicate()
 
 
