@@ -28,7 +28,10 @@ import Control.Concurrent
 display_message:: String -> String 
 display_message msg= "massage received: " ++ msg
 
-list_of_functions = fromList [ ("display_message",display_message) ]
+list_of_functions = fromList [ 
+                      ("display_message",display_message),
+                      ("local_test",display_message)
+                    ]
 
 
 
