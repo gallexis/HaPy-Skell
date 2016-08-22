@@ -1,10 +1,12 @@
 {-# LANGUAGE OverloadedStrings #-}
 
-module Main where
+module Hapyskell.Hapyskell where
 
-import Utils.JSON
-import Structures
-import Manager
+import Hapyskell.Utils.JSON
+import Hapyskell.Structures
+import Hapyskell.Manager
+
+import Hapyskell.Utils.Logging
 
 import Control.Monad
 import qualified Data.ByteString.Char8 as B
@@ -18,7 +20,6 @@ import Data.Map
 import Control.Exception
 import Control.Concurrent
 
-import Utils.Logging
 
 {-
 display_message:: String -> String 
@@ -29,7 +30,15 @@ functions = fromList [ ("display_message",display_message) ]
 
 -}
 
-connect_to_python :: Map String (String -> String) -> IO (Socket, Channel (Maybe Command))
+send :: Channel (Maybe Command) -> String -> String -> IO ()
+send chan [] [] = return ()
+send chan [] _  = return ()
+send chan _ []  = return ()
+send chan order message =
+  writeChannel chan $ Just $ Command order message
+ 
+
+connect_to_python :: Map String (String -> String) -> IO (Channel (Maybe Command))
 connect_to_python map_functions = do
     chan <- newChannel
     sock <- socket AF_UNIX Stream defaultProtocol
@@ -39,7 +48,7 @@ connect_to_python map_functions = do
     forkIO $ sender chan sock
 
 
-    return (sock,chan)
+    return chan
 
 
 
