@@ -5,7 +5,7 @@ module Manager( receiver,
                 manager
 ) where
 
-import JSON_Parser
+import Utils.JSON
 import Structures
 
 import Control.Monad
@@ -28,20 +28,15 @@ import System.Posix
 import Utils.Logging
 
 
-display_message:: String -> String 
-display_message msg= "massage received: " ++ msg
-
-list_of_functions = fromList [ ("display_message",display_message) ]
-
-
-
-receiver chan sock =
+receiver:: Socket -> Map String (String -> String) -> IO()
+receiver sock map_functions =
     forever $ do
         messageReceived <- recv sock 1024
         let message = str_to_json $ B.unpack messageReceived
-        manager message
+        manager message map_functions
         return ()
 
+sender:: Channel (Maybe Command) -> Socket -> IO()
 sender chan sock =
     forever $ do
         command <- try (readChannel chan) :: IO (Either SomeException (Maybe Command) )
@@ -61,23 +56,18 @@ sender chan sock =
                         print "nothing"
                         return ()
 
-manager:: Maybe Command -> IO()
-manager Nothing = do
+manager:: Maybe Command -> Map String (String -> String) -> IO ()
+manager Nothing _ = do
             error "Error"
             return ()
-manager (Just(Command order message)) = do
-      case (lookup order list_of_functions) of
+manager (Just(Command order message)) map_functions = do
+      case (lookup order map_functions) of
         Nothing -> error "error"
         Just f -> do
           let a = f message
           logging a
           return ()
       
-
-
-
-
-
 
 
 

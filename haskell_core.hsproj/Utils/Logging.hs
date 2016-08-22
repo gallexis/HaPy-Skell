@@ -3,8 +3,6 @@ module Utils.Logging(
   ) 
 where
 
-
-
 import System.IO
 import System.Posix
 

@@ -1,12 +1,8 @@
-import time
 import json
-import os
-import subprocess
-import random
 import queue as queue
-from python_main import Network
-from python_main import external_process_manager as etm
 
+from python_core.hapyskell import Network
+from python_core.hapyskell import external_process_manager as etm
 
 # cd haskell_core.hsproj/ ;and  ghc Haskell_core.hs ;and cd ..
 

@@ -77,7 +77,7 @@ class Network(Thread):
 
         server_address = '/tmp/test_sock.ipc'
 
-        # Make sure the socket does not already exist
+        # Make sure the socket does not already exists
         try:
             os.unlink(server_address)
         except OSError:

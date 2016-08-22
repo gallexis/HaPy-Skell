@@ -14,18 +14,14 @@ class external_process_manager(Thread):
         # if ext. program still present: kill him
         self.exit_external_program()
 
-        # when python program receives sigint: kill him & ext. program
+        # when python program receives sigint: kill him then kill ext. program
         signal.signal(signal.SIGINT, self.signal_handler)
-
-
 
     def run(self):
 
         # Run ext. program
-        print("opening")
-        p = subprocess.Popen(["./../haskell_core.hsproj/Haskell_core"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        p = subprocess.Popen(["./../../haskell_core.hsproj/Haskell_core"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         p.communicate()
-
 
 
     # Exit haskell_core

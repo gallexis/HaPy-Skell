@@ -6,7 +6,7 @@ module Structures( Channel(..),
              readChannel
 ) where
 
-import JSON_Parser
+import Utils.JSON
 
 import System.IO
 import Control.Monad
