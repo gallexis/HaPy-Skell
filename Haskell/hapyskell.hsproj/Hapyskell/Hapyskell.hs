@@ -35,7 +35,7 @@ send chan [] [] = return ()
 send chan [] _  = return ()
 send chan _ []  = return ()
 send chan order message =
-  writeChannel chan $ Just $ Command order message
+      writeChannel chan $ Just $ Command order message
  
 
 connect_to_python :: Map String (String -> String) -> IO (Channel (Maybe Command))
